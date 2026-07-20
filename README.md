@@ -1,56 +1,19 @@
-EcoSmart AI Bus Stand – AI Powered Green Energy Smart Public Infrastructure
+# 🌿 EcoSmart AI Bus Stand
 
-EcoSmart AI Bus Stand is an AI and IoT-based smart public infrastructure project developed to promote energy efficiency, environmental sustainability, and intelligent public transportation systems.
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Platform](https://img.shields.io/badge/Platform-Arduino%20UNO-blue.svg)](https://www.arduino.cc/)
+[![Python](https://img.shields.io/badge/Python-3.10%2B-brightgreen.svg)](https://www.python.org/)
+[![Dashboard](https://img.shields.io/badge/UI-Streamlit-red.svg)](https://streamlit.io/)
 
-The system uses an Arduino UNO with multiple environmental sensors to monitor temperature, humidity, passenger occupancy, ambient light, and dustbin fill level. Based on these real-time inputs, an AI-inspired decision engine automatically controls a cooling fan, traffic status indicators, and warning alarms to reduce unnecessary electricity consumption while improving passenger comfort and cleanliness.
+**EcoSmart AI Bus Stand** is an IoT-enabled, AI-optimized smart transit shelter designed for the **National Science Exhibition**. It seamlessly combines Green Energy, Artificial Intelligence, Smart City infrastructure, and Real-Time IoT Telemetry to minimize energy consumption and elevate public passenger comfort.
 
-A Python Streamlit dashboard provides live visualization of sensor data, Green AI Score, estimated energy savings, and intelligent system recommendations through USB serial communication.
+---
 
-Key Features
+## 🌟 Key Features
 
-- AI-based Green Energy Management
-- Intelligent Fan Control
-- Smart Passenger Detection
-- Automatic Day/Night Detection
-- Smart Dustbin Monitoring
-- Green AI Score (0–100)
-- Estimated Energy Saving Analysis
-- Real-time Streamlit Dashboard
-- Explainable AI Recommendations
-- Low-cost Arduino UNO Implementation
-
-Hardware
-
-- Arduino UNO
-- HC-SR04 Ultrasonic Sensor
-- DHT11 Temperature & Humidity Sensor
-- IR Obstacle Sensor
-- LDR Module
-- 2-Channel Relay Module
-- Traffic Light Module
-- 5V DC Fan
-- TMB12A05 Active Buzzer
-- Breadboard and Jumper Wires
-
-Software
-
-- Arduino IDE
-- Python
-- Streamlit
-- PySerial
-- Plotly
-
-Applications
-
-- Smart Bus Stands
-- Smart Cities
-- Green Public Infrastructure
-- Energy-Efficient Public Facilities
-- Environmental Monitoring
-- STEM Education and Research
-
-Note: The "Estimated Energy Saving (%)" and Green AI Score are calculated using intelligent control logic based on sensor data and operating conditions. They are estimation metrics for demonstrating energy optimization and are not direct electrical power measurements.
-
-Developer: Aditya Kumar Mohanani
-Project: EcoSmart AI Bus Stand
-Developed for: Rashtriya Bal Vaigyanik Pratiyogita (RBVP) 2026 – Green Energy Theme
+* 🏃 **Passenger-Aware Cooling:** 5V DC Fan turns ON **only** if temperature exceeds 30°C **AND** a passenger is physically present.
+* 🗑️ **Smart Waste Management:** Ultrasonic HC-SR04 sensor measures dustbin fill levels, driving a 3-stage Traffic Light indicator and an active buzzer alert when level exceeds 90%.
+* 🌙 **Automated Eco Street Lighting:** LDR module detects ambient light and drives street lights autonomously at night.
+* 💨 **Air Quality Monitoring:** MQ135 gas sensor calculates PPM and classifies air safety into Fresh, Moderate, Unhealthy, or Hazardous levels.
+* 🧠 **Green AI Engine:** Dynamic green score logic continuously calculates environmental efficiency (0–100) and issues actionable recommendations.
+* 📊 **Futuristic Streamlit UI:** Features live Plotly gauges, time-series charts, auto-port detection, CSV data logging, and demo simulation mode.
