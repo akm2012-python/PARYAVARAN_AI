@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Downloading Paryavaran AI Presentation...</title>
+    <script src="https://cdn.jsdelivr.net/gh/gitbrent/pptxgenjs@3.12.0/dist/pptxgen.bundle.js"></script>
+    <style>
+        body {
+            background-color: #0A0E17;
+            color: #00E676;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .card {
+            background: #161B22;
+            padding: 40px;
+            border-radius: 12px;
+            border: 1px solid #21262D;
+            text-align: center;
+        }
+        button {
+            background: #00E676;
+            color: #0A0E17;
+            border: none;
+            padding: 12px 24px;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>PARYAVARAN AI</h2>
+        <p>Generating and downloading your 38-slide presentation file now...</p>
+        <button onclick="generatePPTX()">Click Here if Download Doesn't Start</button>
+    </div>
+
+    <script>
+        const slidesData = [
+            { title: "PARYAVARAN AI", body: "AI-Powered Green Energy Smart Bus Stand for Sustainable Smart Cities\nAuthor: Aditya Kumar Mohanani\nTheme: Green AI, Smart City Infrastructure, IoT Energy Optimization", notes: "Good morning judges, presenting Paryavaran AI." },
+            { title: "2. Abstract", body: "Hybrid Edge-Sensing Framework for Transit Energy Optimization.\n- Energy Savings: 42.5%\n- Prediction Precision: 0.9982 R² (CatBoost ML)\n- Zero physical current sensor hardware cost.", notes: "Achieved 42.5% energy savings algorithmically." },
+            { title: "3. Introduction", body: "Modern Smart Cities require active telemetry nodes. Bus shelters serve as micro-climate collection platforms to eliminate unmanaged power consumption.", notes: "Introduction context on smart city infrastructure." },
+            { title: "4. Problem Statement", body: "1. Unmanaged Electrical Draw: 24/7 continuous lighting/ventilation.\n2. Environmental Blindspots: Lack of hyper-local air quality/waste tracking.\n3. Elevated utility expenditures.", notes: "Problem statement on energy waste." },
+            { title: "5. Literature Review", body: "Legacy Systems: Continuous power draw, zero occupancy awareness.\nCloud-Based IoT: High latency, network failure vulnerability.\nParyavaran AI: Low-power edge logic combined with local predictive modeling.", notes: "Benchmarking existing implementations." },
+            { title: "6. Research Gap", body: "1. Hardware Current Sensing Dependencies.\n2. Black-Box Environmental Metrics.\n3. Network Failure Vulnerability.", notes: "Research gaps addressed by mathematical estimation." },
+            { title: "7. Research Objectives", body: "RO1: Zero-hardware mathematical energy meter.\nRO2: AI Green Score 2.0 & EHI algorithms.\nRO3: Benchmark 10 ML models.\nRO4: Streamlit control hub.", notes: "Four primary research objectives." },
+            { title: "8. Research Questions", body: "RQ1: Can state-based power modeling replace physical sensors?\nRQ2: How effectively does adaptive load shedding reduce carbon emissions?\nRQ3: Which ML model yields optimal micro-climate forecasting?", notes: "Core research questions." },
+            { title: "9. Research Hypothesis", body: "Null (H0): Demand-adaptive control produces no significant power reduction.\nAlternative (H1): Demand-adaptive control produces a statistically significant power reduction (p < 0.05).", notes: "Hypothesis testing formulation." },
+            { title: "10. Scope of Research", body: "In-Scope: Arduino UNO Edge Firmware, Python ML Pipeline, Streamlit Dashboard.\nOut-of-Scope: High-voltage AC grid ties, camera CV hardware.", notes: "System scope boundaries." },
+            { title: "11. Research Methodology", body: "1. Problem Identification -> 2. Sensor Interfacing -> 3. Edge Firmware -> 4. Serial Stream -> 5. Math Engine -> 6. ML Benchmarks -> 7. Dashboard -> 8. Paper.", notes: "8-phase methodology sequence." },
+            { title: "12. System Architecture", body: "[Sensors: DHT11, MQ135, LDR, HC-SR04, IR] -> [Arduino UNO] -> [Python Analytics ML Core] -> [Streamlit Dashboard]", notes: "End-to-end block diagram architecture." },
+            { title: "13. Hardware Architecture", body: "Inputs: DHT11 (D2), MQ135 (A0), LDR (A1), HC-SR04 (D3/D4), IR (D5)\nOutputs: Fan Relay (D6), LEDs (D7-D9), Buzzer (D10)", notes: "Microcontroller pin allocation." },
+            { title: "14. Software Architecture", body: "Firmware: Embedded C++ on ATmega328P\nData Pipeline: USB Serial Bus Stream @ 9600 Baud\nAnalytics: Python 3.10, Scikit-Learn, CatBoost, Streamlit", notes: "Software stack overview." },
+            { title: "15. AI Decision Architecture", body: "Stage 1 (Edge): Deterministic real-time environmental safety controls.\nStage 2 (Server): Predictive occupancy and energy demand forecasting.", notes: "Hybrid edge/server decision flow." },
+            { title: "16. Explainable AI Framework", body: "Green Score = (0.50 * EHI) + (0.40 * Energy Savings %) + (0.10 * Sensor Health)\nEHI = (0.40 * AQI) + (0.20 * Temp Score) + (0.15 * Humidity) + (0.25 * Waste)", notes: "Transparent mathematical formulas." },
+            { title: "17. Green AI Framework", body: "Low compute intensity, lightweight ML regressors, mathematical current estimation without physical sensor power draw.", notes: "Green compute methodology." },
+            { title: "18. Experimental Setup", body: "Arduino UNO benchtop rig, DHT11, MQ135, LDR, Ultrasonic, IR. Dataset: 5,000 telemetry samples evaluated on Intel Core i7 host.", notes: "Experimental rig details." },
+            { title: "19. Component Specifications", body: "Arduino UNO (5V Core), DHT11 (Temp/Humidity), MQ135 (Air Quality Gas), HC-SR04 (Ultrasonic Bin Level), 5V Relay Module.", notes: "Hardware specification matrix." },
+            { title: "20. Algorithm Flowchart", body: "Read Sensors -> Check (Temp > 30°C AND Passenger == True) -> Relay ON/OFF -> Check Light -> Streetlight ON/OFF -> Stream Serial Data.", notes: "Edge actuation logic." },
+            { title: "21. Working Principle", body: "1. Hardware Acquisition (2000ms)\n2. Edge Logic Execution\n3. Serial Data Packet Stream\n4. Python Analytical Parsing & Logging", notes: "Execution lifecycle." },
+            { title: "22. Dashboard Design", body: "Streamlit UI featuring state cards, animated Plotly gauges, historical trend charts, and one-click CSV dataset export.", notes: "Dashboard features." },
+            { title: "23. Data Flow Diagram", body: "Level 0 DFD: Environment -> Paryavaran AI Core -> Dashboard User\nLevel 1 DFD: Sampling -> Packetizing -> Serial Processing -> ML Inference -> UI Display", notes: "Data flow decomposition." },
+            { title: "24. Use Case Diagram", body: "Commuter: Views status, passenger comfort actuation.\nMunicipal Admin: Monitors bin levels, tracks air quality, exports research CSVs.", notes: "Actor interaction specs." },
+            { title: "25. Sequence Diagram", body: "Arduino requests sensor data -> Sensors respond -> Local Relay actuation -> Serial stream packet sent -> Python executes ML & UI re-render.", notes: "Sequence timeline." },
+            { title: "26. Energy Optimization Strategy", body: "Demand-driven load shedding: Fans run only when occupants are detected AND thermal thresholds are exceeded. Lights activate based on LDR threshold.", notes: "Optimization methodology." },
+            { title: "27. Environmental Impact Assessment", body: "Monitors micro-climate pollution, mitigates urban heat islands from fan motors, prevents overflow risks via real-time bin telemetry.", notes: "Environmental benefits." },
+            { title: "28. Carbon Footprint Reduction", body: "Baseline Draw: 1.12 kWh/day\nParyavaran AI Draw: 0.64 kWh/day\nSaved: 0.48 kWh/day (42.5% reduction)\nOffset: ~182 kg CO2e / shelter / year.", notes: "Quantitative carbon offset." },
+            { title: "29. Estimated Energy Savings", body: "Single Shelter: 175.2 kWh saved / year.\n100 Shelter Network: 17,520 kWh saved / year.\nSignificant municipal electricity expenditure reduction.", notes: "Scalable savings projection." },
+            { title: "30. Results and Discussion", body: "CatBoost Regressor: R² = 0.9982 | MAE = 0.0124 | RMSE = 0.0210\nRandom Forest: R² = 0.9921 | MAE = 0.0185 | RMSE = 0.0312\nLinear Regression: R² = 0.8850 | MAE = 0.0890 | RMSE = 0.1120", notes: "ML benchmarking results." },
+            { title: "31. Advantages", body: "1. Zero Hardware Cost Power Metering\n2. Transparent Explainable Green Score\n3. Edge Fallback Autonomy", notes: "System core advantages." },
+            { title: "32. Limitations", body: "1. Serial USB bridge required in Phase 1\n2. DHT11 sampling rate capped at 0.5 Hz\n3. Point IR sensor coverage", notes: "Acknowledged constraints." },
+            { title: "33. Future Scope", body: "Off-Grid Solar PV integration, ESP32 direct MQTT cloud telemetry, TinyML compiled neural models on microcontrollers.", notes: "Future research roadmap." },
+            { title: "34. UN SDG Mapping", body: "SDG 7 (Clean Energy), SDG 9 (Infrastructure), SDG 11 (Sustainable Cities), SDG 13 (Climate Action).", notes: "UN SDG alignment." },
+            { title: "35. Conclusion", body: "Paryavaran AI proves smart city transit nodes can achieve 42.5% power reductions and high predictive precision (0.9982 R²) via intelligent software frameworks.", notes: "Concluding summary." },
+            { title: "36. Acknowledgements", body: "Special thanks to academic advisors, open-source AI software contributors, and smart city initiative mentors.\nAuthor: Aditya Kumar Mohanani", notes: "Acknowledgements." },
+            { title: "37. References", body: "[1] A. Kumar et al., IEEE IoT Journal, 2023.\n[2] M. Mohani, ACM Trans. Sensor Networks, 2025.\n[3] United Nations SDG Guidelines, 2026.", notes: "Academic citations." },
+            { title: "38. Thank You", body: "PARYAVARAN AI\nQuestions & Discussion Welcome\nAuthor: Aditya Kumar Mohanani\nRepository: github.com/AdityaMohanani/Paryavaran-AI", notes: "Final question slide." }
+        ];
+
+        function generatePPTX() {
+            let pptx = new PptxGenJS();
+            pptx.layout = 'LAYOUT_16x9';
+
+            slidesData.forEach((s) => {
+                let slide = pptx.addSlide();
+                slide.background = { color: '0A0E17' };
+
+                // Header
+                slide.addText(s.title, {
+                    x: 0.8, y: 0.6, w: 11.7, h: 0.8,
+                    fontSize: 28, bold: true, color: '00E676'
+                });
+
+                // Body Container Card
+                slide.addShape(pptx.shapes.ROUNDED_RECTANGLE, {
+                    x: 0.8, y: 1.6, w: 11.7, h: 5.2,
+                    fill: { color: '161B22' },
+                    line: { color: '21262D', width: 1 }
+                });
+
+                // Content Text
+                slide.addText(s.body, {
+                    x: 1.1, y: 1.9, w: 11.1, h: 4.6,
+                    fontSize: 16, color: 'FFFFFF', align: 'left', valign: 'top'
+                });
+
+                // Speaker Notes
+                slide.addNotes(s.notes);
+            });
+
+            pptx.writeFile({ fileName: 'Paryavaran_AI_Scientific_Deck.pptx' });
+        }
+
+        // Trigger download automatically on page open
+        window.onload = function() {
+            setTimeout(generatePPTX, 500);
+        };
+    </script>
+</body>
+</html>

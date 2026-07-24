@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paryavaran AI — Explainable Smart Bus Stand | Aditya Kumar Mohanani</title>
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- AOS Scroll Animation CSS -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-color: #070e10;
+            --card-bg: rgba(17, 38, 42, 0.7);
+            --card-border: #1e4d48;
+            --accent-green: #00e676;
+            --accent-teal: #80cbc4;
+            --accent-glow: rgba(0, 230, 118, 0.25);
+            --text-main: #e0f2f1;
+            --text-dim: #90a4ae;
+            --gradient-card: linear-gradient(135deg, rgba(17, 38, 42, 0.9) 0%, rgba(11, 20, 22, 0.95) 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Canvas Particle Background */
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* Header Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 18px 8%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(15, 29, 32, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            z-index: 1000;
+            border-bottom: 2px solid var(--accent-green);
+        }
+
+        .logo {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: var(--accent-green);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 28px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-main);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.92rem;
+            transition: 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-green);
+        }
+
+        .badge-pill-header {
+            background: var(--accent-green);
+            color: #000;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 0.8rem;
+            margin-right: 6px;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            padding: 140px 8% 80px 8%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 40px;
+            background: radial-gradient(circle at 75% 20%, rgba(0, 230, 118, 0.08) 0%, transparent 60%);
+        }
+
+        .hero-text {
+            max-width: 620px;
+        }
+
+        .badge-school {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(0, 230, 118, 0.1);
+            color: var(--accent-green);
+            padding: 8px 18px;
+            border-radius: 20px;
+            border: 1px solid rgba(0, 230, 118, 0.3);
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-bottom: 24px;
+            letter-spacing: 0.5px;
+        }
+
+        .hero-text h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            line-height: 1.12;
+            margin-bottom: 12px;
+            color: var(--accent-green);
+        }
+
+        .hero-text p.subtitle {
+            color: var(--accent-teal);
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .hero-text p.desc {
+            color: var(--text-dim);
+            font-size: 1.05rem;
+            line-height: 1.65;
+            margin-bottom: 32px;
+        }
+
+        .author-box {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: var(--card-bg);
+            padding: 12px 20px;
+            border-radius: 14px;
+            border: 1px solid var(--card-border);
+            width: fit-content;
+        }
+
+        .author-box i {
+            font-size: 1.8rem;
+            color: var(--accent-green);
+        }
+
+        .author-info h4 {
+            font-size: 1rem;
+            color: #fff;
+            font-weight: 700;
+        }
+
+        .author-info p {
+            font-size: 0.82rem;
+            margin: 0;
+            color: var(--accent-teal);
+        }
+
+        /* Hero Card Visual */
+        .hero-card {
+            background: var(--gradient-card);
+            border: 1px solid var(--card-border);
+            border-radius: 24px;
+            padding: 32px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+            width: 460px;
+            position: relative;
+            backdrop-filter: blur(10px);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--card-border);
+            padding-bottom: 16px;
+            margin-bottom: 20px;
+        }
+
+        .pulse-dot {
+            width: 10px;
+            height: 10px;
+            background-color: var(--accent-green);
+            border-radius: 50%;
+            box-shadow: 0 0 12px var(--accent-green);
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 230, 118, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(0, 230, 118, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 230, 118, 0); }
+        }
+
+        .metric-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .mini-card {
+            background: rgba(7, 14, 16, 0.8);
+            padding: 16px;
+            border-radius: 14px;
+            border: 1px solid var(--card-border);
+        }
+
+        .mini-card label {
+            font-size: 0.75rem;
+            color: var(--accent-teal);
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 0.8px;
+        }
+
+        .mini-card val {
+            display: block;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-top: 6px;
+        }
+
+        /* Sections General */
+        section {
+            padding: 100px 8%;
+        }
+
+        .section-title {
+            text-align: center;
+            max-width: 720px;
+            margin: 0 auto 60px auto;
+        }
+
+        .section-title h2 {
+            font-size: 2.6rem;
+            color: var(--accent-green);
+            margin-bottom: 16px;
+            font-weight: 800;
+        }
+
+        .section-title p {
+            color: var(--text-dim);
+            font-size: 1.05rem;
+            line-height: 1.6;
+        }
+
+        /* Features Grid */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .f-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            padding: 32px;
+            border-radius: 18px;
+            transition: 0.3s;
+        }
+
+        .f-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--accent-green);
+            box-shadow: 0 12px 30px rgba(0, 230, 118, 0.1);
+        }
+
+        .f-icon {
+            font-size: 2.2rem;
+            color: var(--accent-green);
+            margin-bottom: 20px;
+        }
+
+        .f-card h3 {
+            font-size: 1.25rem;
+            color: var(--accent-green);
+            margin-bottom: 12px;
+        }
+
+        .f-card p {
+            color: var(--text-dim);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        /* System Architecture Grid */
+        .arch-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .arch-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 32px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .arch-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--accent-green);
+            box-shadow: 0 15px 35px rgba(0, 230, 118, 0.12);
+        }
+
+        .arch-badge {
+            background: rgba(0, 230, 118, 0.15);
+            color: var(--accent-green);
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            display: inline-block;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+        }
+
+        .arch-card h3 {
+            font-size: 1.35rem;
+            color: #fff;
+            margin-bottom: 14px;
+        }
+
+        .arch-list {
+            list-style: none;
+        }
+
+        .arch-list li {
+            font-size: 0.92rem;
+            color: var(--text-dim);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            line-height: 1.4;
+        }
+
+        .arch-list li i {
+            color: var(--accent-green);
+            margin-top: 3px;
+        }
+
+        /* Flow Pipeline */
+        .pipeline-box {
+            background: var(--gradient-card);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 35px;
+            margin-top: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .pipe-node {
+            background: rgba(7, 14, 16, 0.8);
+            border: 1px solid var(--card-border);
+            padding: 16px 24px;
+            border-radius: 14px;
+            text-align: center;
+            flex: 1;
+            min-width: 160px;
+        }
+
+        .pipe-node i {
+            font-size: 1.6rem;
+            color: var(--accent-teal);
+            margin-bottom: 8px;
+        }
+
+        .pipe-node h4 {
+            font-size: 0.95rem;
+            color: #fff;
+        }
+
+        .pipe-arrow {
+            color: var(--accent-green);
+            font-size: 1.3rem;
+        }
+
+        /* Interactive Simulator Section */
+        .sim-box {
+            background: var(--gradient-card);
+            border: 1px solid var(--card-border);
+            border-radius: 24px;
+            padding: 45px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            align-items: center;
+        }
+
+        .sim-controls label {
+            display: block;
+            margin-top: 18px;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .sim-controls input[type="range"] {
+            width: 100%;
+            height: 6px;
+            border-radius: 5px;
+            background: var(--card-border);
+            outline: none;
+            accent-color: var(--accent-green);
+            margin-top: 10px;
+        }
+
+        .sim-output {
+            background: rgba(7, 14, 16, 0.9);
+            padding: 35px;
+            border-radius: 20px;
+            border: 1px solid var(--card-border);
+            text-align: center;
+        }
+
+        .trilogic-state {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--accent-green);
+            margin: 10px 0;
+            line-height: 1;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 30px;
+            background: #0b1416;
+            color: var(--accent-teal);
+            font-size: 0.95rem;
+            border-top: 1px solid var(--card-border);
+            margin-top: 40px;
+        }
+
+        footer b {
+            color: #fff;
+        }
+
+        @media (max-width: 992px) {
+            .hero { flex-direction: column; text-align: center; }
+            .hero-card { width: 100%; }
+            .arch-grid { grid-template-columns: 1fr; }
+            .sim-box { grid-template-columns: 1fr; }
+            .pipeline-box { flex-direction: column; }
+            .pipe-arrow { transform: rotate(90deg); }
+            .nav-links { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="bg-canvas"></canvas>
+
+    <!-- Header Navigation -->
+    <nav>
+        <div class="logo">
+            🌱 Paryavaran AI
+        </div>
+        <ul class="nav-links">
+            <li><a href="#about">About Project</a></li>
+            <li><a href="#features">21 Signature Features</a></li>
+            <li><a href="#hardware">System Architecture</a></li>
+            <li><a href="#simulator">EcoTwin™ Simulator</a></li>
+        </ul>
+        <div style="display: flex; align-items: center; gap: 8px;">
+            <span class="badge-pill-header">MIT License</span>
+            <span class="badge-pill-header">Arduino UNO</span>
+            <span class="badge-pill-header">TinyML</span>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="about">
+        <div class="hero-text" data-aos="fade-right">
+            <div class="badge-school">
+                <i class="fa-solid fa-leaf"></i> Explainable Green Energy Smart Bus Stand
+            </div>
+            <h1>🌱 Paryavaran AI</h1>
+            <p class="subtitle">Explainable AI Powered Green Energy Smart Bus Stand</p>
+            <p class="desc">A self-optimizing, edge-AI powered bus shelter ecosystem engineered with transparent feature deductions, ternary state control, and continuous energy & carbon emission predictions.</p>
+            
+            <div class="author-box">
+                <i class="fa-solid fa-user-gear"></i>
+                <div class="author-info">
+                    <h4>Aditya Kumar Mohanani</h4>
+                    <p>Lead Developer & Innovator</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="hero-card" data-aos="fade-left">
+            <div class="card-header">
+                <div>
+                    <h3 style="color:#fff; font-size:1.1rem;">EcoTwin™ Telemetry</h3>
+                    <small style="color:var(--text-dim); font-family:'JetBrains Mono', monospace;">TriLogic Stream Active</small>
+                </div>
+                <div class="pulse-dot"></div>
+            </div>
+            <div class="metric-grid">
+                <div class="mini-card">
+                    <label>TriLogic State</label>
+                    <val id="hero-state" style="color:var(--accent-green)">+1 (Eco)</val>
+                </div>
+                <div class="mini-card">
+                    <label>Power Saved</label>
+                    <val id="hero-energy" style="color:var(--accent-teal)">38%</val>
+                </div>
+                <div class="mini-card">
+                    <label>Air Quality %</label>
+                    <val id="hero-air">92%</val>
+                </div>
+                <div class="mini-card">
+                    <label>Est. Load</label>
+                    <val id="hero-watt" style="font-family:'JetBrains Mono', monospace;">2.5 W</val>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 21 Core Signature Features Grid -->
+    <section id="features">
+        <div class="section-title" data-aos="fade-up">
+            <h2>🚀 All 21 Signature Features</h2>
+            <p>Combining Explainable AI (XAI), Ternary logic hardware control, sensorless predictive analytics, and automated research utilities.</p>
+        </div>
+
+        <div class="features-grid">
+            <!-- 1 -->
+            <div class="f-card" data-aos="fade-up" data-aos-delay="100">
+                <div class="f-icon"><i class="fa-solid fa-brain"></i></div>
+                <h3>1. GreenExplain XAI™</h3>
+                <p>Provides human-readable explanations and explicit feature deductions alongside every operational system state.</p>
+            </div>
+            <!-- 2 -->
+            <div class="f-card" data-aos="fade-up" data-aos-delay="150">
+                <div class="f-icon"><i class="fa-solid fa-traffic-light"></i></div>
+                <h3>2. TriLogic Engine™</h3>
+                <p>Implements ternary state logic (-1: Alert, 0: Balanced, +1: Eco Mode) displayed physically through traffic LEDs.</p>
+            </div>
+            <!-- 3 -->
+            <div class="f-card" data-aos="fade-up" data-aos-delay="200">
+                <div class="f-icon"><i class="fa-solid fa-bolt"></i></div>
+                <h3>3. EcoPredict AI™</h3>
+                <p>Estimates continuous energy usage, power conservation ratios, and carbon offsets without hardware current meters.</p>
+            </div>
+            <!-- 4 -->
+            <div class="f-card" data-aos="fade-up" data-aos-delay="250">
+                <div class="f-icon"><i class="fa-solid fa-wind"></i></div>
+                <h3>4. AirGuardian AI™</h3>
+                <p>Monitors ambient hazardous gas concentrations using MQ-135 sensors, triggering automated mitigation alerts.</p>
+            </div>
+            <!-- 5 -->
+            <div class="f-card" data-aos="fade-up" data-aos-delay="300">
+                <div class="f-icon"><i class="fa-solid fa-clone"></i></div>
+                <h3>5. EcoTwin™ Simulator</h3>
+                <p>An interactive digital twin allowing real-time parameter adjustments and 'What-If' scenario evaluations.</p>
+            </div>
+            <!-- 6 -->
+            <div class="f-card" data-aos="fade-up" data-aos-delay="350">
+                <div class="f-icon"><i class="fa-solid fa-microchip"></i></div>
+                <h3>6. TinyML Embedded Layer</h3>
+                <p>Lightweight execution optimized for deployment directly on low-power microcontrollers like Arduino UNO.</p>
+            </div>
+            <!-- 7 -->
+            <div class="f-card" data-aos="fade-up" data-aos-delay="100">
+                <div class="f-icon"><i class="fa-solid fa-plug-circle-bolt"></i></div>
+                <h3>7. AI Energy Efficiency Meter</h3>
+                <p>Computes mathematical power profiles based on real-time active load dynamics and peripheral state draws.</p>
+            </div>
+            <!-- 8 -->
+            <div class="f-card" data-aos="fade-up" data-aos-delay="150">
+                <div class="f-icon"><i class="fa-solid fa-heart-pulse"></i></div>
+                <h3>8. Environmental Health Index (EHI)</h3>
+                <p>Fuses multi-sensor air, temperature, and cleanliness telemetry into a single comprehensive safety score.</p>
+            </div>
+            <!-- 9 -->
+            <div class="f-card" data-aos="fade-up" data-aos-delay="200">
+                <div class="f-icon"><i class="fa-solid fa-users"></i></div>
+                <h3>9. Passenger Density Predictor</h3>
+                <p>Utilizes IR beam patterns to calculate real-time bus stand occupancy and seating demand dynamics.</p>
+            </div>
+            <!-- 10 -->
+            <div class="f-card" data-aos="fade-up" data-aos-delay="250">
+                <div class="f-icon"><i class="fa-solid fa-chart-line"></i></div>
+                <h3>10. Predictive Energy Forecasting</h3>
+                <p>Anticipates power consumption curves using machine learning models trained on ambient historical trends.</p>
+            </div>
+            <!-- 11 -->
+            <div class="f-card" data-aos="fade-up" data-aos-delay="300">
+                <div class="f-icon"><i class="fa-solid fa-database"></i></div>
+                <h3>11. Automated ML Dataset Generator</h3>
+                <p>Continuously archives calibrated sensor readings into organized, research-grade CSV datasets automatically.</p>
+            </div>
+            <!-- 12 -->
+            <div class="f-card" data-aos="fade-up" data-aos-delay="350">
+                <div class="f-icon"><i class="fa-solid fa-gauge-high"></i></div>
+                <h3>12. Live Telemetry Dashboard</h3>
+                <p>A responsive UI built with Streamlit and Plotly for real-time sensor monitoring and visual gauge updates.</p>
+            </div>
+            <!-- 13 -->
+            <div class="f-card" data-aos="fade-up" data-aos-delay="100">
+                <div class="f-icon"><i class="fa-solid fa-trash-can"></i></div>
+                <h3>13. Smart Waste Level Sensing</h3>
+                <p>Uses ultrasonic HC-SR04 sensors to monitor dustbin fill percentages and issue maintenance alerts.</p>
+            </div>
+            <!-- 14 -->
+            <div class="f-card" data-aos="fade-up" data-aos-delay="150">
+                <div class="f-icon"><i class="fa-solid fa-lightbulb"></i></div>
+                <h3>14. Adaptive Ambient Lighting</h3>
+                <p>Adjusts bus shelter illumination based on LDR ambient light levels to optimize energy usage.</p>
+            </div>
+            <!-- 15 -->
+            <div class="f-card" data-aos="fade-up" data-aos-delay="200">
+                <div class="f-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                <h3>15. Real-Time Fault Diagnostics</h3>
+                <p>Monitors hardware sensor integrity continuously to detect missing or corrupted telemetry streams.</p>
+            </div>
+            <!-- 16 -->
+            <div class="f-card" data-aos="fade-up" data-aos-delay="250">
+                <div class="f-icon"><i class="fa-solid fa-smog"></i></div>
+                <h3>16. Carbon Footprint Estimator</h3>
+                <p>Translates energy savings directly into estimated carbon emission reductions ($CO_2$ offsets).</p>
+            </div>
+            <!-- 17 -->
+            <div class="f-card" data-aos="fade-up" data-aos-delay="300">
+                <div class="f-icon"><i class="fa-solid fa-cable-car"></i></div>
+                <h3>17. High-Speed Serial Bridge</h3>
+                <p>Handles zero-latency serial streaming from microcontrollers using PySerial data pipelines.</p>
+            </div>
+            <!-- 18 -->
+            <div class="f-card" data-aos="fade-up" data-aos-delay="350">
+                <div class="f-icon"><i class="fa-solid fa-vial"></i></div>
+                <h3>18. Model Benchmarking Suite</h3>
+                <p>Runs automated performance comparisons across Scikit-Learn regression models for continuous validation.</p>
+            </div>
+            <!-- 19 -->
+            <div class="f-card" data-aos="fade-up" data-aos-delay="100">
+                <div class="f-icon"><i class="fa-solid fa-fan"></i></div>
+                <h3>19. Autonomous Climate Control</h3>
+                <p>Activates cooling fans based on real-time temperature and humidity thresholds from DHT11 sensors.</p>
+            </div>
+            <!-- 20 -->
+            <div class="f-card" data-aos="fade-up" data-aos-delay="150">
+                <div class="f-icon"><i class="fa-solid fa-sliders"></i></div>
+                <h3>20. Virtual Sensor Override</h3>
+                <p>Allows manual override of sensor inputs during live testing and exhibition scenarios.</p>
+            </div>
+            <!-- 21 -->
+            <div class="f-card" data-aos="fade-up" data-aos-delay="200">
+                <div class="f-icon"><i class="fa-solid fa-leaf"></i></div>
+                <h3>21. Zero-Cloud Local Inference</h3>
+                <p>Runs all core logic and AI inference locally on the edge, ensuring operational independence without cloud requirements.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- System Architecture Section -->
+    <section id="hardware">
+        <div class="section-title" data-aos="fade-up">
+            <h2>⚙️ System Architecture</h2>
+            <p>Comprehensive hardware, machine learning, and hardware-free estimation stack driving zero-latency decision intelligence.</p>
+        </div>
+
+        <div class="arch-grid">
+            <!-- Hardware Layer -->
+            <div class="arch-card" data-aos="fade-up" data-aos-delay="100">
+                <span class="arch-badge">Hardware Layer</span>
+                <h3>Sensor & Actuator Stack</h3>
+                <ul class="arch-list">
+                    <li><i class="fa-solid fa-microchip"></i> <b>Microcontroller:</b> Arduino UNO Board</li>
+                    <li><i class="fa-solid fa-temperature-high"></i> <b>DHT11:</b> Ambient Temperature & Humidity</li>
+                    <li><i class="fa-solid fa-wind"></i> <b>MQ-135:</b> Hazardous Gas & Air Quality PPM</li>
+                    <li><i class="fa-solid fa-ruler-vertical"></i> <b>HC-SR04:</b> Ultrasonic Waste Level Sensor</li>
+                    <li><i class="fa-solid fa-person-walking"></i> <b>IR Sensor:</b> Passenger Telemetry</li>
+                    <li><i class="fa-solid fa-sun"></i> <b>LDR Module:</b> Ambient Light Intensity</li>
+                    <li><i class="fa-solid fa-traffic-light"></i> <b>Ternary LED Array:</b> Red / Yellow / Green</li>
+                </ul>
+            </div>
+
+            <!-- Software Stack -->
+            <div class="arch-card" data-aos="fade-up" data-aos-delay="200">
+                <span class="arch-badge">Software Stack</span>
+                <h3>AI & Analytics Core</h3>
+                <ul class="arch-list">
+                    <li><i class="fa-brands fa-python"></i> <b>Python Framework:</b> Core Analytical Engine</li>
+                    <li><i class="fa-solid fa-chart-line"></i> <b>Streamlit Dashboard:</b> Real-Time Monitoring</li>
+                    <li><i class="fa-solid fa-brain"></i> <b>Scikit-Learn:</b> ML Regressor Benchmarking</li>
+                    <li><i class="fa-solid fa-chart-pie"></i> <b>Plotly Engine:</b> Dynamic Gauges & Visuals</li>
+                    <li><i class="fa-solid fa-plug"></i> <b>PySerial Bridge:</b> High-Speed Serial Streaming</li>
+                    <li><i class="fa-solid fa-file-csv"></i> <b>CSV Data Logger:</b> Continuous Metric Archiving</li>
+                </ul>
+            </div>
+
+            <!-- Virtual Engine -->
+            <div class="arch-card" data-aos="fade-up" data-aos-delay="300">
+                <span class="arch-badge">Virtual AI Layer</span>
+                <h3>Sensorless Predictions</h3>
+                <ul class="arch-list">
+                    <li><i class="fa-solid fa-bolt"></i> <b>Virtual Energy Meter:</b> Dynamic Power Estimation</li>
+                    <li><i class="fa-solid fa-smog"></i> <b>CO₂ Offset Calc:</b> Environmental Math</li>
+                    <li><i class="fa-solid fa-heart-pulse"></i> <b>EHI Score:</b> Environmental Health Index</li>
+                    <li><i class="fa-solid fa-triangle-exclamation"></i> <b>Fault Diagnostic:</b> Sensor Health Auditing</li>
+                    <li><i class="fa-solid fa-magnifying-glass-chart"></i> <b>GreenExplain XAI™:</b> Decision Trees</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Animated Data Flow Pipeline -->
+        <div class="pipeline-box" data-aos="zoom-in">
+            <div class="pipe-node">
+                <i class="fa-solid fa-tower-broadcast"></i>
+                <h4>Arduino Telemetry</h4>
+                <small style="color:var(--text-dim)">15-Column Serial Stream</small>
+            </div>
+            <div class="pipe-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+            <div class="pipe-node">
+                <i class="fa-solid fa-usb"></i>
+                <h4>PySerial Bridge</h4>
+                <small style="color:var(--text-dim)">9600 Baud Rate</small>
+            </div>
+            <div class="pipe-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+            <div class="pipe-node">
+                <i class="fa-solid fa-brain"></i>
+                <h4>TriLogic & XAI Core</h4>
+                <small style="color:var(--text-dim)">Decision Engine</small>
+            </div>
+            <div class="pipe-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+            <div class="pipe-node">
+                <i class="fa-solid fa-desktop"></i>
+                <h4>EcoTwin™ Output</h4>
+                <small style="color:var(--text-dim)">Actuators & Dashboard</small>
+            </div>
+        </div>
+    </section>
+
+    <!-- Live EcoTwin Interactive Simulator -->
+    <section id="simulator">
+        <div class="section-title" data-aos="fade-up">
+            <h2>🧮 Interactive Scenario Simulator</h2>
+            <p>Simulate physical sensor changes interactively to watch the Paryavaran AI decision matrix respond in real-time.</p>
+        </div>
+
+        <div class="sim-box" data-aos="zoom-in">
+            <div class="sim-controls">
+                <h3 style="color:#fff;">Virtual Sensor Overrides</h3>
+                
+                <label>Ambient Temperature: <span id="temp-val" style="color:var(--accent-green)">32</span>°C</label>
+                <input type="range" id="sim-temp" min="15" max="45" value="32" oninput="updateSim()">
+
+                <label>Dustbin Level: <span id="dust-val" style="color:var(--accent-green)">45</span>%</label>
+                <input type="range" id="sim-dust" min="0" max="100" value="45" oninput="updateSim()">
+
+                <label>MQ-135 Gas Sensor Raw: <span id="mq-val" style="color:var(--accent-green)">220</span></label>
+                <input type="range" id="sim-mq" min="100" max="800" value="220" oninput="updateSim()">
+            </div>
+
+            <div class="sim-output">
+                <h3 style="color:#fff; font-size:1.1rem;">GreenExplain XAI™ & TriLogic State</h3>
+                <div class="trilogic-state" id="sim-state">+1 (Eco Mode)</div>
+                <p id="sim-explain" style="color:var(--text-dim); margin-bottom: 20px; font-size:0.95rem;">Optimal environmental conditions maintained.</p>
+                <div style="background:rgba(0,0,0,0.4); padding:14px; border-radius:12px; border:1px solid var(--card-border);">
+                    <strong style="color:#fff;">Estimated Load:</strong> <span id="sim-watts" style="color:var(--accent-teal); font-family:'JetBrains Mono', monospace;">2.5 W</span>
+                </div>
+            </div>
+        </div>
+    </section>
+<!-- Research & Impact Section -->
+    <section id="research">
+        <div class="section-title" data-aos="fade-up">
+            <h2>📄 Research & Demonstration Highlights</h2>
+            <p>Exhibition benchmarks verified through continuous IoT session logging.</p>
+        </div>
+
+        <div class="research-grid" data-aos="fade-up">
+            <div>
+                <h3 style="color:#fff; margin-bottom:20px;">Project Achievement Badges</h3>
+                <div class="badge-pill">🌟 <b>Clean Air Champion:</b> Air Quality Index maintained above 80%</div>
+                <div class="badge-pill">⚡ <b>Excellent Energy Saver:</b> Automated relay logic saves >30% energy</div>
+                <div class="badge-pill">🧠 <b>XAI Pioneer:</b> Explainable AI Decision Engine implemented</div>
+            </div>
+            <div>
+                <h3 style="color:#fff; margin-bottom:20px;">Exhibition Credentials</h3>
+                <p style="color:var(--text-dim); line-height:1.6; margin-bottom:15px;">
+                    This project represents an innovative convergence of embedded hardware engineering, edge computing, and explainable artificial intelligence designed specifically for urban municipal infrastructure.
+                </p>
+                <p style="color:var(--accent-teal);"><b>Creator:</b> Aditya Kumar Mohanani</p>
+                <p style="color:var(--accent-teal);"><b>School:</b> PM SHRI JNV Burhanpur</p>
+            </div>
+        </div>
+    </section>
+     <!-- Footer -->
+    <footer>
+        <p><strong>EcoSmart AI Bus Stand</strong> | Developed by <strong>Aditya Kumar Mohanani</strong></p>
+        <p style="margin-top: 6px;">PM SHRI Jawahar Navodaya Vidyalaya (JNV), Burhanpur | Science Exhibition</p>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({ duration: 900, once: true });
+
+        // Particle Canvas Background Animation
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        for (let i = 0; i < 40; i++) {
+            particles.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                radius: Math.random() * 2,
+                dx: (Math.random() - 0.5) * 0.5,
+                dy: (Math.random() - 0.5) * 0.5
+            });
+        }
+
+        function animateCanvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = 'rgba(0, 230, 118, 0.25)';
+            
+            particles.forEach(p => {
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                ctx.fill();
+
+                p.x += p.dx;
+                p.y += p.dy;
+
+                if (p.x < 0 || p.x > canvas.width) p.dx *= -1;
+                if (p.y < 0 || p.y > canvas.height) p.dy *= -1;
+            });
+
+            requestAnimationFrame(animateCanvas);
+        }
+        animateCanvas();
+
+        // Digital Twin Interactive Logic
+        function updateSim() {
+            const temp = parseInt(document.getElementById('sim-temp').value);
+            const dust = parseInt(document.getElementById('sim-dust').value);
+            const mq = parseInt(document.getElementById('sim-mq').value);
+
+            document.getElementById('temp-val').innerText = temp;
+            document.getElementById('dust-val').innerText = dust;
+            document.getElementById('mq-val').innerText = mq;
+
+            let state = "+1 (Eco Mode)";
+            let color = "#00e676";
+            let deductions = [];
+
+            if (temp > 35 || mq > 400 || dust > 85) {
+                state = "-1 (Alert Mode)";
+                color = "#ff5252";
+            } else if (temp > 30 || mq > 300 || dust > 70) {
+                state = "0 (Balanced Mode)";
+                color = "#ffd700";
+            }
+
+            if(temp > 30) deductions.push(`Elevated Temp (${temp}°C)`);
+            if(dust > 70) deductions.push(`Dustbin High (${dust}%)`);
+            if(mq > 300) deductions.push(`Air Degradation (PPM ${mq})`);
+
+            const stateElem = document.getElementById('sim-state');
+            stateElem.innerText = state;
+            stateElem.style.color = color;
+
+            document.getElementById('sim-explain').innerText = deductions.length > 0 ? deductions.join(' | ') : 'Optimal operational efficiency maintained.';
+            
+            let fanWatts = temp > 30 ? 15.0 : 0.0;
+            document.getElementById('sim-watts').innerText = (2.5 + fanWatts).toFixed(1) + ' W';
+        }
+    </script>
+</body>
+</html>

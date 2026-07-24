@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoSmart AI Bus Stand | Aditya Kumar Mohanani</title>
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- AOS Scroll Animation CSS -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-color: #081214;
+            --card-bg: rgba(17, 36, 40, 0.7);
+            --card-border: rgba(31, 58, 62, 0.8);
+            --accent-green: #00e676;
+            --accent-teal: #80cbc4;
+            --accent-glow: rgba(0, 230, 118, 0.25);
+            --accent-dark-teal: #132a2f;
+            --text-main: #e0f2f1;
+            --text-dim: #90a4ae;
+            --gradient-card: linear-gradient(135deg, rgba(19, 42, 47, 0.8) 0%, rgba(13, 30, 34, 0.9) 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Canvas Particle Background */
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* Glassmorphism Header Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 18px 8%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(8, 18, 20, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            z-index: 1000;
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        .logo {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: var(--accent-green);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 28px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-main);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.92rem;
+            transition: 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-green);
+        }
+
+        .btn-launch {
+            background: var(--accent-green);
+            color: #040a0b;
+            padding: 10px 22px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            text-decoration: none;
+            box-shadow: 0 0 20px var(--accent-glow);
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-launch:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 30px rgba(0, 230, 118, 0.6);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            padding: 140px 8% 80px 8%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 40px;
+            background: radial-gradient(circle at 75% 20%, rgba(0, 230, 118, 0.08) 0%, transparent 60%);
+        }
+
+        .hero-text {
+            max-width: 620px;
+        }
+
+        .badge-school {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(0, 230, 118, 0.1);
+            color: var(--accent-green);
+            padding: 8px 18px;
+            border-radius: 20px;
+            border: 1px solid rgba(0, 230, 118, 0.3);
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-bottom: 24px;
+            letter-spacing: 0.5px;
+        }
+
+        .hero-text h1 {
+            font-size: 3.6rem;
+            font-weight: 800;
+            line-height: 1.12;
+            margin-bottom: 20px;
+            background: linear-gradient(180deg, #ffffff 0%, #80cbc4 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-text p {
+            color: var(--text-dim);
+            font-size: 1.1rem;
+            line-height: 1.65;
+            margin-bottom: 32px;
+        }
+
+        .author-box {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: var(--card-bg);
+            padding: 12px 20px;
+            border-radius: 14px;
+            border: 1px solid var(--card-border);
+            width: fit-content;
+        }
+
+        .author-box i {
+            font-size: 1.8rem;
+            color: var(--accent-green);
+        }
+
+        .author-info h4 {
+            font-size: 1rem;
+            color: #fff;
+            font-weight: 700;
+        }
+
+        .author-info p {
+            font-size: 0.82rem;
+            margin: 0;
+            color: var(--accent-teal);
+        }
+
+        /* Hero Card Visual */
+        .hero-card {
+            background: var(--gradient-card);
+            border: 1px solid var(--card-border);
+            border-radius: 24px;
+            padding: 32px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+            width: 460px;
+            position: relative;
+            backdrop-filter: blur(10px);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--card-border);
+            padding-bottom: 16px;
+            margin-bottom: 20px;
+        }
+
+        .pulse-dot {
+            width: 10px;
+            height: 10px;
+            background-color: var(--accent-green);
+            border-radius: 50%;
+            box-shadow: 0 0 12px var(--accent-green);
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 230, 118, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(0, 230, 118, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 230, 118, 0); }
+        }
+
+        .metric-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .mini-card {
+            background: rgba(8, 18, 20, 0.6);
+            padding: 16px;
+            border-radius: 14px;
+            border: 1px solid var(--card-border);
+        }
+
+        .mini-card label {
+            font-size: 0.75rem;
+            color: var(--accent-teal);
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 0.8px;
+        }
+
+        .mini-card val {
+            display: block;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-top: 6px;
+        }
+
+        /* Sections General */
+        section {
+            padding: 100px 8%;
+        }
+
+        .section-title {
+            text-align: center;
+            max-width: 720px;
+            margin: 0 auto 60px auto;
+        }
+
+        .section-title h2 {
+            font-size: 2.6rem;
+            color: #fff;
+            margin-bottom: 16px;
+            font-weight: 800;
+        }
+
+        .section-title p {
+            color: var(--text-dim);
+            font-size: 1.05rem;
+            line-height: 1.6;
+        }
+
+        /* Section: System Architecture (#hardware) */
+        .arch-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .arch-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 32px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .arch-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--accent-green);
+            box-shadow: 0 15px 35px rgba(0, 230, 118, 0.12);
+        }
+
+        .arch-badge {
+            background: rgba(0, 230, 118, 0.15);
+            color: var(--accent-green);
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            display: inline-block;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+        }
+
+        .arch-card h3 {
+            font-size: 1.35rem;
+            color: #fff;
+            margin-bottom: 14px;
+        }
+
+        .arch-list {
+            list-style: none;
+        }
+
+        .arch-list li {
+            font-size: 0.92rem;
+            color: var(--text-dim);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            line-height: 1.4;
+        }
+
+        .arch-list li i {
+            color: var(--accent-green);
+            margin-top: 3px;
+        }
+
+        /* Flow Diagram Container */
+        .pipeline-box {
+            background: var(--gradient-card);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 35px;
+            margin-top: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .pipe-node {
+            background: rgba(8, 18, 20, 0.8);
+            border: 1px solid var(--card-border);
+            padding: 16px 24px;
+            border-radius: 14px;
+            text-align: center;
+            flex: 1;
+            min-width: 160px;
+        }
+
+        .pipe-node i {
+            font-size: 1.6rem;
+            color: var(--accent-teal);
+            margin-bottom: 8px;
+        }
+
+        .pipe-node h4 {
+            font-size: 0.95rem;
+            color: #fff;
+        }
+
+        .pipe-arrow {
+            color: var(--accent-green);
+            font-size: 1.3rem;
+        }
+
+        /* Feature Cards Grid */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .f-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            padding: 32px;
+            border-radius: 18px;
+            transition: 0.3s;
+        }
+
+        .f-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--accent-green);
+            box-shadow: 0 12px 30px rgba(0, 230, 118, 0.1);
+        }
+
+        .f-icon {
+            font-size: 2.2rem;
+            color: var(--accent-green);
+            margin-bottom: 20px;
+        }
+
+        .f-card h3 {
+            font-size: 1.25rem;
+            color: #fff;
+            margin-bottom: 12px;
+        }
+
+        .f-card p {
+            color: var(--text-dim);
+            font-size: 0.92rem;
+            line-height: 1.55;
+        }
+
+        /* Interactive Simulator Section */
+        .sim-box {
+            background: var(--gradient-card);
+            border: 1px solid var(--card-border);
+            border-radius: 24px;
+            padding: 45px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            align-items: center;
+        }
+
+        .sim-controls label {
+            display: block;
+            margin-top: 18px;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .sim-controls input[type="range"] {
+            width: 100%;
+            height: 6px;
+            border-radius: 5px;
+            background: var(--card-border);
+            outline: none;
+            accent-color: var(--accent-green);
+            margin-top: 10px;
+        }
+
+        .sim-output {
+            background: rgba(8, 18, 20, 0.9);
+            padding: 35px;
+            border-radius: 20px;
+            border: 1px solid var(--card-border);
+            text-align: center;
+        }
+
+        .grade-badge {
+            font-size: 4.5rem;
+            font-weight: 800;
+            color: var(--accent-green);
+            margin: 10px 0;
+            line-height: 1;
+        }
+
+        /* Research Section */
+        .research-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .badge-pill {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-left: 4px solid var(--accent-green);
+            padding: 14px 20px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            font-size: 0.95rem;
+        }
+
+        /* Footer */
+        footer {
+            background: #04090a;
+            border-top: 1px solid var(--card-border);
+            padding: 45px 8%;
+            text-align: center;
+            color: var(--text-dim);
+            font-size: 0.92rem;
+        }
+
+        footer strong {
+            color: #fff;
+        }
+
+        @media (max-width: 992px) {
+            .hero { flex-direction: column; text-align: center; }
+            .hero-card { width: 100%; }
+            .arch-grid { grid-template-columns: 1fr; }
+            .sim-box { grid-template-columns: 1fr; }
+            .pipeline-box { flex-direction: column; }
+            .pipe-arrow { transform: rotate(90deg); }
+            .research-grid { grid-template-columns: 1fr; }
+            .nav-links { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="bg-canvas"></canvas>
+
+    <!-- Header Navigation -->
+    <nav>
+        <div class="logo">
+            <i class="fa-solid fa-leaf"></i> EcoSmart AI
+        </div>
+        <ul class="nav-links">
+            <li><a href="#about">About Project</a></li>
+            <li><a href="#hardware">System Architecture</a></li>
+            <li><a href="#features">Signature Features</a></li>
+            <li><a href="#simulator">Digital Twin</a></li>
+            <li><a href="#research">Research & Impact</a></li>
+        </ul>
+        <a href="#simulator" class="btn-launch"><i class="fa-solid fa-microchip"></i> Live Digital Twin</a>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="about">
+        <div class="hero-text" data-aos="fade-right">
+            <div class="badge-school">
+                <i class="fa-solid fa-graduation-cap"></i> PM SHRI JNV Burhanpur | Science Exhibition
+            </div>
+            <h1>EcoSmart AI Bus Stand</h1>
+            <p>A self-optimizing IoT shelter ecosystem engineered with Explainable AI (XAI) to conserve transit grid electricity, predict passenger congestion, and monitor public air quality—all using non-invasive edge sensor telemetry.</p>
+            
+            <div class="author-box">
+                <i class="fa-solid fa-user-gear"></i>
+                <div class="author-info">
+                    <h4>Aditya Kumar Mohanani</h4>
+                    <p>Project Innovator | PM SHRI JNV Burhanpur</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="hero-card" data-aos="fade-left">
+            <div class="card-header">
+                <div>
+                    <h3 style="color:#fff; font-size:1.1rem;">Digital Twin Telemetry</h3>
+                    <small style="color:var(--text-dim); font-family:'JetBrains Mono', monospace;">Real-time Stream Engine Active</small>
+                </div>
+                <div class="pulse-dot"></div>
+            </div>
+            <div class="metric-grid">
+                <div class="mini-card">
+                    <label>Green AI Score</label>
+                    <val id="hero-score" style="color:var(--accent-green)">95 / 100</val>
+                </div>
+                <div class="mini-card">
+                    <label>Power Saved</label>
+                    <val id="hero-energy" style="color:var(--accent-teal)">35%</val>
+                </div>
+                <div class="mini-card">
+                    <label>Air Quality %</label>
+                    <val id="hero-air">88%</val>
+                </div>
+                <div class="mini-card">
+                    <label>Est. Wattage</label>
+                    <val id="hero-watt" style="font-family:'JetBrains Mono', monospace;">2.5 W</val>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section: Complete System Architecture (#hardware) -->
+    <section id="hardware">
+        <div class="section-title" data-aos="fade-up">
+            <h2>⚙️ System Architecture</h2>
+            <p>Comprehensive hardware, machine learning, and hardware-free estimation stack driving zero-latency decision intelligence.</p>
+        </div>
+
+        <div class="arch-grid">
+            <!-- Hardware Layer -->
+            <div class="arch-card" data-aos="fade-up" data-aos-delay="100">
+                <span class="arch-badge">Hardware Layer</span>
+                <h3>Sensor & Actuator Stack</h3>
+                <ul class="arch-list">
+                    <li><i class="fa-solid fa-microchip"></i> <b>Microcontroller:</b> Arduino UNO Board</li>
+                    <li><i class="fa-solid fa-temperature-high"></i> <b>DHT11:</b> Ambient Temperature & Humidity</li>
+                    <li><i class="fa-solid fa-wind"></i> <b>MQ-135:</b> Hazardous Gas & Air Quality PPM</li>
+                    <li><i class="fa-solid fa-ruler-vertical"></i> <b>HC-SR04:</b> Ultrasonic Dustbin Height Sensor</li>
+                    <li><i class="fa-solid fa-person-walking"></i> <b>IR Sensor:</b> Passenger Density Telemetry</li>
+                    <li><i class="fa-solid fa-sun"></i> <b>LDR Module:</b> Day/Night Light Intensity</li>
+                    <li><i class="fa-solid fa-toggle-on"></i> <b>Control Relays:</b> Smart Fan & Lighting Loops</li>
+                </ul>
+            </div>
+
+            <!-- Software Stack -->
+            <div class="arch-card" data-aos="fade-up" data-aos-delay="200">
+                <span class="arch-badge">Software Stack</span>
+                <h3>AI & Analytics Core</h3>
+                <ul class="arch-list">
+                    <li><i class="fa-brands fa-python"></i> <b>Python 3.10+:</b> Core Analytical Framework</li>
+                    <li><i class="fa-solid fa-chart-line"></i> <b>Streamlit Framework:</b> Real-Time Dashboard</li>
+                    <li><i class="fa-solid fa-brain"></i> <b>Scikit-Learn:</b> Model Comparison Engine</li>
+                    <li><i class="fa-solid fa-chart-pie"></i> <b>Plotly Graphics:</b> Interactive Gauges</li>
+                    <li><i class="fa-solid fa-plug"></i> <b>PySerial:</b> USB Communication Bridge</li>
+                    <li><i class="fa-solid fa-file-csv"></i> <b>Auto Data Logger:</b> Continuous CSV Archiving</li>
+                </ul>
+            </div>
+
+            <!-- Virtual Engine -->
+            <div class="arch-card" data-aos="fade-up" data-aos-delay="300">
+                <span class="arch-badge">Virtual AI Layer</span>
+                <h3>Hardware-Free Predictions</h3>
+                <ul class="arch-list">
+                    <li><i class="fa-solid fa-bolt"></i> <b>Virtual Energy Meter:</b> Dynamic Wattage Calc</li>
+                    <li><i class="fa-solid fa-smog"></i> <b>CO₂ Avoided Estimator:</b> Grid Emission Math</li>
+                    <li><i class="fa-solid fa-heart-pulse"></i> <b>EHI Index:</b> Environmental Health Score</li>
+                    <li><i class="fa-solid fa-triangle-exclamation"></i> <b>Fault Diagnostic:</b> Noise & Freeze Detection</li>
+                    <li><i class="fa-solid fa-magnifying-glass-chart"></i> <b>Explainable AI (XAI):</b> Point Deduction Trees</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Animated Data Flow Pipeline Diagram -->
+        <div class="pipeline-box" data-aos="zoom-in">
+            <div class="pipe-node">
+                <i class="fa-solid fa-tower-broadcast"></i>
+                <h4>Sensor Inputs</h4>
+                <small style="color:var(--text-dim)">Arduino UNO</small>
+            </div>
+            <div class="pipe-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+            <div class="pipe-node">
+                <i class="fa-solid fa-usb"></i>
+                <h4>Serial Bridge</h4>
+                <small style="color:var(--text-dim)">PySerial 9600 Baud</small>
+            </div>
+            <div class="pipe-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+            <div class="pipe-node">
+                <i class="fa-solid fa-gears"></i>
+                <h4>XAI Logic Core</h4>
+                <small style="color:var(--text-dim)">Streamlit Engine</small>
+            </div>
+            <div class="pipe-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+            <div class="pipe-node">
+                <i class="fa-solid fa-desktop"></i>
+                <h4>Dashboard Output</h4>
+                <small style="color:var(--text-dim)">Relay + Visual Telemetry</small>
+            </div>
+        </div>
+    </section>
+     <div class="container">
+        <h2>🚀 Core Features</h2>
+        <div class="grid">
+            <div class="card">
+                <h3>🧠 GreenExplain XAI™</h3>
+                <p>Never shows just a raw number. Every system decision is accompanied by human-readable explanations and explicit feature deductions.</p>
+            </div>
+            <div class="card">
+                <h3>🔺 TriLogic Engine™</h3>
+                <p>Transitions beyond binary logic into a ternary framework (-1: Alert, 0: Balanced, +1: Eco Mode) rendered via physical traffic lights.</p>
+            </div>
+            <div class="card">
+                <h3>⚡ EcoPredict AI™</h3>
+                <p>Estimates continuous energy usage, power conservation ratios, and projected carbon emission offsets without requiring external hardware sensors.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Signature Features Grid -->
+    <section id="features">
+        <div class="section-title" data-aos="fade-up">
+            <h2>🌟 24 Signature AI Innovations</h2>
+            <p>Specialized features engineered specifically to stand out during exhibition evaluation.</p>
+        </div>
+
+        <div class="features-grid">
+            <div class="f-card" data-aos="fade-up" data-aos-delay="100">
+                <div class="f-icon"><i class="fa-solid fa-brain"></i></div>
+                <h3>Explainable AI (XAI)</h3>
+                <p>Transparent real-time point-by-point breakdown showing exactly why optimization scores change.</p>
+            </div>
+
+            <div class="f-card" data-aos="fade-up" data-aos-delay="200">
+                <div class="f-icon"><i class="fa-solid fa-bolt"></i></div>
+                <h3>Virtual Energy Meter</h3>
+                <p>Calculates active wattage and power savings mathematically without requiring extra INA219 chips.</p>
+            </div>
+
+            <div class="f-card" data-aos="fade-up" data-aos-delay="300">
+                <div class="f-icon"><i class="fa-solid fa-earth-americas"></i></div>
+                <h3>Environmental Health Index</h3>
+                <p>Synthesizes DHT11 temperature, humidity, and air metrics into a single 0–100 public safety score.</p>
+            </div>
+
+            <div class="f-card" data-aos="fade-up" data-aos-delay="400">
+                <div class="f-icon"><i class="fa-solid fa-users"></i></div>
+                <h3>Passenger Density Predictor</h3>
+                <p>Evaluates IR state history to classify and forecast low, medium, or high upcoming congestion.</p>
+            </div>
+
+            <div class="f-card" data-aos="fade-up" data-aos-delay="500">
+                <div class="f-icon"><i class="fa-solid fa-trash-arrow-up"></i></div>
+                <h3>Waste Collection Forecast</h3>
+                <p>Calculates bin volume fill rates using HC-SR04 telemetry to schedule timely municipal dispatch.</p>
+            </div>
+
+            <div class="f-card" data-aos="fade-up" data-aos-delay="600">
+                <div class="f-icon"><i class="fa-solid fa-layer-group"></i></div>
+                <h3>ML Model Comparison</h3>
+                <p>Evaluates Decision Trees, Random Forests, KNN, and SVR live on Streamlit to select optimal model logic.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Live Digital Twin Interactive Simulator -->
+    <section id="simulator">
+        <div class="section-title" data-aos="fade-up">
+            <h2>🧮 Interactive Scenario Simulator</h2>
+            <p>Simulate physical sensor changes interactively to watch the EcoSmart AI decision matrix respond in real-time.</p>
+        </div>
+
+        <div class="sim-box" data-aos="zoom-in">
+            <div class="sim-controls">
+                <h3 style="color:#fff;">Virtual Sensor Overrides</h3>
+                
+                <label>Ambient Temperature: <span id="temp-val" style="color:var(--accent-green)">32</span>°C</label>
+                <input type="range" id="sim-temp" min="15" max="45" value="32" oninput="updateSim()">
+
+                <label>Dustbin Level: <span id="dust-val" style="color:var(--accent-green)">45</span>%</label>
+                <input type="range" id="sim-dust" min="0" max="100" value="45" oninput="updateSim()">
+
+                <label>MQ-135 Gas Sensor Raw: <span id="mq-val" style="color:var(--accent-green)">220</span></label>
+                <input type="range" id="sim-mq" min="100" max="800" value="220" oninput="updateSim()">
+            </div>
+
+            <div class="sim-output">
+                <h3 style="color:#fff; font-size:1.1rem;">AI Decision & Sustainability Output</h3>
+                <div class="grade-badge" id="sim-grade">A+</div>
+                <p id="sim-explain" style="color:var(--text-dim); margin-bottom: 20px; font-size:0.95rem;">Optimal operational efficiency.</p>
+                <div style="background:rgba(0,0,0,0.4); padding:14px; border-radius:12px; border:1px solid var(--card-border);">
+                    <strong style="color:#fff;">Estimated Power Load:</strong> <span id="sim-watts" style="color:var(--accent-teal); font-family:'JetBrains Mono', monospace;">2.5 W</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Research & Impact Section -->
+    <section id="research">
+        <div class="section-title" data-aos="fade-up">
+            <h2>📄 Research & Demonstration Highlights</h2>
+            <p>Exhibition benchmarks verified through continuous IoT session logging.</p>
+        </div>
+
+        <div class="research-grid" data-aos="fade-up">
+            <div>
+                <h3 style="color:#fff; margin-bottom:20px;">Project Achievement Badges</h3>
+                <div class="badge-pill">🌟 <b>Clean Air Champion:</b> Air Quality Index maintained above 80%</div>
+                <div class="badge-pill">⚡ <b>Excellent Energy Saver:</b> Automated relay logic saves >30% energy</div>
+                <div class="badge-pill">🧠 <b>XAI Pioneer:</b> Explainable AI Decision Engine implemented</div>
+            </div>
+            <div>
+                <h3 style="color:#fff; margin-bottom:20px;">Exhibition Credentials</h3>
+                <p style="color:var(--text-dim); line-height:1.6; margin-bottom:15px;">
+                    This project represents an innovative convergence of embedded hardware engineering, edge computing, and explainable artificial intelligence designed specifically for urban municipal infrastructure.
+                </p>
+                <p style="color:var(--accent-teal);"><b>Creator:</b> Aditya Kumar Mohanani</p>
+                <p style="color:var(--accent-teal);"><b>School:</b> PM SHRI JNV Burhanpur</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p><strong>EcoSmart AI Bus Stand</strong> | Developed by <strong>Aditya Kumar Mohanani</strong></p>
+        <p style="margin-top: 6px;">PM SHRI Jawahar Navodaya Vidyalaya (JNV), Burhanpur | Science Exhibition</p>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({ duration: 900, once: true });
+
+        // Particle Canvas Background Animation
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        for (let i = 0; i < 40; i++) {
+            particles.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                radius: Math.random() * 2,
+                dx: (Math.random() - 0.5) * 0.5,
+                dy: (Math.random() - 0.5) * 0.5
+            });
+        }
+
+        function animateCanvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = 'rgba(0, 230, 118, 0.25)';
+            
+            particles.forEach(p => {
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                ctx.fill();
+
+                p.x += p.dx;
+                p.y += p.dy;
+
+                if (p.x < 0 || p.x > canvas.width) p.dx *= -1;
+                if (p.y < 0 || p.y > canvas.height) p.dy *= -1;
+            });
+
+            requestAnimationFrame(animateCanvas);
+        }
+        animateCanvas();
+
+        // Digital Twin Interactive Logic
+        function updateSim() {
+            const temp = parseInt(document.getElementById('sim-temp').value);
+            const dust = parseInt(document.getElementById('sim-dust').value);
+            const mq = parseInt(document.getElementById('sim-mq').value);
+
+            document.getElementById('temp-val').innerText = temp;
+            document.getElementById('dust-val').innerText = dust;
+            document.getElementById('mq-val').innerText = mq;
+
+            let score = 100;
+            let deductions = [];
+
+            if(temp > 30) {
+                let d = (temp - 30) * 2;
+                score -= d;
+                deductions.push(`High Temp (-${d} pts)`);
+            }
+            if(dust > 80) {
+                score -= 20;
+                deductions.push(`Dustbin Full (-20 pts)`);
+            }
+            if(mq > 350) {
+                score -= 15;
+                deductions.push(`Poor Air Quality (-15 pts)`);
+            }
+
+            score = Math.max(0, Math.min(100, score));
+
+            let grade = 'A+';
+            if(score < 90) grade = 'A';
+            if(score < 80) grade = 'B';
+            if(score < 60) grade = 'C';
+            if(score < 40) grade = 'D';
+
+            document.getElementById('sim-grade').innerText = grade;
+            document.getElementById('sim-explain').innerText = deductions.length > 0 ? deductions.join(' | ') : 'Optimal operational efficiency.';
+            
+            let fanWatts = temp > 30 ? 15.0 : 0.0;
+            document.getElementById('sim-watts').innerText = (2.5 + fanWatts).toFixed(1) + ' W';
+        }
+    </script>
+</body>
+</html>
